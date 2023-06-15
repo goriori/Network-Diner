@@ -1,6 +1,6 @@
 {
   "name": "api-for-bot-network-bussines",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "application for bussinse type diner",
   "main": "server.js",
   "type": "module",

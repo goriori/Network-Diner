@@ -9,7 +9,6 @@ import command_operations from './settings/index.js'
 
 
 
-
 const bot = new Telegram(process.env.API_TOKEN_BOT, {
     polling: true
 })
@@ -17,27 +16,28 @@ const bot = new Telegram(process.env.API_TOKEN_BOT, {
 
 bot.setMyCommands(command_operations)
 command_operations.forEach(command => {
-    bot.onText(command.regCommand, (msg) => {
+    bot.onText(command.regCommand, (msg) => { 
         const chat_id = msg.chat.id
         const text = msg.text
         command.handler(chat_id, bot)
-    })
+    }) 
 })
 
 
 
 
 import roles_markups from './settings/markups/roles.js'
-import {directorMarkup, stafMarkup, roomMarkups} from './settings/markups/director/director.js'
+import { directorMarkup, stafMarkup, roomMarkups, menuMarkup } from './settings/markups/director/director.js'
 
 const allCallBacks = [
     ...roles_markups.inline_keyboard,
     ...directorMarkup.inline_keyboard,
     ...stafMarkup.inline_keyboard,
     ...roomMarkups.inline_keyboard,
+    ...menuMarkup.inline_keyboard
 ].flat(Infinity)
 
-
+ 
 bot.on('callback_query', (msg) => {
 
     const data = msg.data

@@ -1,6 +1,6 @@
 {
   "name": "bot-network-diner",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "application control telegram bot for control bussines procces type diner",
   "main": "main.js",
   "type": "module",

@@ -25,9 +25,17 @@ class TableController {
     async getInfo(req, res) {
         try {
             const tables = await Tables.findAndCountAll()
-            const free_tables = await Tables.findAndCountAll({ where: { conditions: false } })
-            const occupied_tables = await Tables.findAndCountAll({ where: { conditions: true } })
-            res.json({ tables, free_tables, occupied_tables })
+            const free_tables = await Tables.findAndCountAll({ where: { condition: false } })
+            const occupied_tables = await Tables.findAndCountAll({ where: { condition: true } })
+            const objectResponse = {
+                count: {
+                    tables: tables.count,
+                    free_tables: free_tables.count,
+                    occupied_tables: occupied_tables.count
+                }
+
+            }
+            res.json(objectResponse)
         } catch (error) {
             console.log(error)
         }
@@ -35,7 +43,7 @@ class TableController {
 
     async getFreeTables(req, res) {
         try {
-            const free_tables = await Tables.findAll({ where: { conditions: false } })
+            const free_tables = await Tables.findAll({ where: { condition: false } })
             res.json(free_tables)
         } catch (error) {
             console.log(error)
@@ -43,7 +51,7 @@ class TableController {
     }
     async getNotFreeTables(req, res) {
         try {
-            const not_free_tables = await Tables.findAll({ where: { conditions: true } })
+            const not_free_tables = await Tables.findAll({ where: { condition: true } })
             res.json(not_free_tables)
         } catch (error) {
             console.log(error)

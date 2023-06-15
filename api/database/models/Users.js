@@ -18,10 +18,14 @@ const Users = database.define('users', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    status_work:{
-        type:DataTypes.BOOLEAN,
-        defaultValue:false,
-        allowNull:false
+    phone_number: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    status_work: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
     }
 
 })

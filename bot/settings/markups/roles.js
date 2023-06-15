@@ -11,7 +11,7 @@ const roles_markups = {
         [
             {
                 text: 'Директор',
-                callback_data: 'role_director',
+                callback_data: 'role_director', 
                 handler: (chat_id, bot, message_id) => {
 
 
@@ -24,15 +24,16 @@ const roles_markups = {
                         if (auth === null) bot.sendMessage(chat_id, 'Не верные данные, попробуйте снова',)
                         else {
                             const user_role = auth.user.role.name_role
+                            const username = auth.user.username
                             switch (user_role) {
                                 case "Директор":
-                                    bot.sendMessage(chat_id, `Добро пожаловать в систему , ваша роль ${user_role}`, { reply_markup: directorMarkup })
+                                    bot.sendMessage(chat_id, `Добро пожаловать в систему , ваша роль ${user_role} , ${username}`, { reply_markup: directorMarkup })
                                     break;
                                 case "Повар":
-                                    bot.sendMessage(chat_id, `Добро пожаловать в систему , ваша роль ${user_role} cook`,)
+                                    bot.sendMessage(chat_id, `Добро пожаловать в систему , ваша роль ${user_role}, ${username} cook`,)
                                     break;
                                 case "Официант":
-                                    bot.sendMessage(chat_id, `Добро пожаловать в систему , ваша роль ${user_role} waiter`,)
+                                    bot.sendMessage(chat_id, `Добро пожаловать в систему , ваша роль ${user_role}, ${username} waiter`,)
                                     break;
                             }
 

@@ -1,22 +1,21 @@
 import Users from '../../database/models/Users.js'
-
+import Roles from '../../database/models/Roles.js'
 
 class UserController {
 
     async getAllUser(req, res) {
         try {
             const users = await Users.findAll()
-            const sortUsers = users.filter(item => item.roleId !== 1);
-            res.json(sortUsers)
+            res.json(users)
         } catch (error) {
             console.log(error)
         }
     }
 
-    
-    async getWaiter() {
+
+    async getWaiter(req, res) {
         try {
-            const usersWaiter = await Users.findAll({ where: { roleId: 3 } })
+            const usersWaiter = await Users.findAll({ where: { roleId: 3 }, include: [{ model: Roles, required: true }] })
             res.json(usersWaiter)
         } catch (error) {
             console.log(error)
@@ -24,9 +23,9 @@ class UserController {
     }
 
 
-    async getCooks() {
+    async getCooks(req, res) {
         try {
-            const usersWaiter = await Users.findAll({ where: { roleId: 2 } })
+            const usersWaiter = await Users.findAll({ where: { roleId: 2 } ,include: [{ model: Roles, required: true }] })
             res.json(usersWaiter)
         } catch (error) {
             console.log(error)
@@ -36,7 +35,7 @@ class UserController {
 
     async getUsersWork(req, res) {
         try {
-            const usersWork = await Users.findAll({ where: { status_work: true } })
+            const usersWork = await Users.findAll({ where: { status_work: true }, include: [{ model: Roles, required: true }] })
             res.json(usersWork)
         } catch (error) {
             console.log(error)
@@ -44,7 +43,7 @@ class UserController {
     }
     async getUsersNotWork(req, res) {
         try {
-            const usersNotWork = await Users.findAll({ where: { status_work: false } })
+            const usersNotWork = await Users.findAll({ where: { status_work: false }, include: [{ model: Roles, required: true }] })
             res.json(usersNotWork)
         } catch (error) {
             console.log(error)
