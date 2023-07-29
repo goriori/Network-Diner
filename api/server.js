@@ -6,9 +6,10 @@ import bcrypto from 'bcrypt'
 
 
 import auth_router from './routers/authorization.js'
-import user_router from './routers/users.js'
+import user_router from './routers/users.js' 
 import table_router from './routers/table.js'
 import product_router from './routers/products.js'
+
 
 import database from './database/database.js'
 import Enterprises from './database/models/Enterprises.js'
@@ -22,6 +23,7 @@ import Products_type from './database/models/Product_type.js'
 
 import rendering_product_types from './database/prerenders/product_type.render.js'
 import render_roles from './database/prerenders/roles.render.js'
+import product_render from './database/prerenders/product.render.js'
 const serverStarting = async () => {
     try {
         database
@@ -32,6 +34,7 @@ const serverStarting = async () => {
             .then(async () => {
                 await rendering_product_types()
                 await render_roles()
+                await product_render()
             })
             .then(() => {
                 const app = express()
@@ -41,7 +44,7 @@ const serverStarting = async () => {
                 app.use('/api/table', table_router)
                 app.use('/api/product', product_router)
                 app.listen(process.env.PORT, () => {
-                    console.log(chalk.blue('Server started'))
+                    console.log(chalk.blue('Server started on port', + process.env.PORT))
                 })
             })
     } catch (error) {

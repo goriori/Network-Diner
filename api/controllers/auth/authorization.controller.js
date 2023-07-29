@@ -2,60 +2,39 @@ import Users from "../../database/models/Users.js";
 import Roles from "../../database/models/Roles.js";
 import bcrypto from 'bcrypt'
 import { generate_jwt, parse_token } from "./utils/jwt.js";
-
+import { check_password, hash_password } from "./utils/hash_password.js";
+import { validationResult } from 'express-validator'
+import authorizationServices from "./authorization.services.js";
 class AuthController {
     async signin(req, res) {
-        try {
+        const resultValid = validationResult(req)
+        if (resultValid.isEmpty()) {
             const { username, password } = req.body
+            const result = await authorizationServices.signin(username, password)
+            return res.json(result)
 
-            const findUser = await Users.findOne({ where: { username }, include: [{ model: Roles, required: true }] })
-            console.log(findUser.username, findUser.password)
-            if (!findUser) return res.status(404).json('Unauthorize')
-
-
-            bcrypto.compare(password, findUser.password, (err, result) => {
-                if (!result) return res.status(401).json("Не верный пароль")
-
-                else {
-                    // const token = generate_jwt({username:findUser.username, enterpriseId:findUser.enterpriseId})
-                    res.json({
-                        message: "Success authorization",
-                        user: {
-                            username: findUser.username,
-                            enterprice_id: findUser.enterpriseId,
-                            role: findUser.role
-                        },
-
-                    })
-                }
-            })
-
-
-        } catch (error) {
-            console.log(error)
+        } else {
+            return res.json(resultValid.array())
         }
     }
 
     async signup(req, res) {
-        try {
+        const resultValid = validationResult(req)
+        if (resultValid.isEmpty()) {
             const { username, password } = req.body
-
-            bcrypto.hash(saltRounds, password, async (err, hash_password) => {
-                if (err) console.log(err)
-                const createUser = await Users.create({ username, hash_password })
-                res.json('Success created new user')
-
-            })
-
-        } catch (error) {
-            console.log(error)
+            const result = await authorizationServices.signup(username, password)
+            return res.json(result)
+        } else {
+            return res.json(resultValid.array())
         }
+
+
 
     }
 
     async getRoles(req, res) {
         try {
-            const getRoles = await Roles.findAll()
+            const getRoles = await authorizationServices.getRoles()
             res.json(getRoles)
         } catch (error) {
             console.log(error)

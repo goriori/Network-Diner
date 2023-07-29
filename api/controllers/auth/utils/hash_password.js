@@ -1,24 +1,15 @@
 import bcrypto from 'bcrypt'
 
 const saltRounds = 10
-const hash_password = (password) => {
-    
-    const hash = bcrypto.hash(saltRounds, password, (err, result) => {
-        if (err) console.log(err)
-        return result
-    })
-    console.log(hash)
+const hash_password = async (password) => {
+    const hash = await bcrypto.hash(password, saltRounds)
     return hash
 }
 
-const check_password = (password, hash) => {
+
+const check_password = async (password, hash) => {
     console.log(password, hash)
-    
-    const valid_password = bcrypto.compare(password, hash, (err, result) => {
-        console.log(result)
-        if (err) console.log(err)
-        return result
-    })
+    const valid_password = await bcrypto.compare(password, hash)
     return valid_password
 
 }

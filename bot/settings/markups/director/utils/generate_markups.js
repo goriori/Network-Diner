@@ -44,6 +44,7 @@ const generateProductsMarkup = async (tyep_product) => {
 
 const generateMenuMarkup = async () => {
     const menu_types = await requestGetApi('/product/product_types', 'get')
+    console.log(menu_types)
     const itemsMarkup = [[]]
     for (let i = 0, l = 0; i < menu_types.length; i++) {
         if (i % 3 === 0) {
@@ -52,7 +53,7 @@ const generateMenuMarkup = async () => {
         }
         itemsMarkup[l].push({
             id: menu_types[i].id,
-            text: menu_types[i].name_type_product,
+            text: menu_types[i].name_type_product, 
             callback_data: menu_types[i].callback_data,
             handler: async (chat_id, bot, message_id) => {
                 const productMarkup = await generateProductsMarkup(menu_types[i].id)

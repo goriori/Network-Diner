@@ -1,23 +1,21 @@
-import Products_type from "../../database/models/Product_type.js"
-import Products from "../../database/models/Products.js"
 
-
+import productServices from "./product.services.js"
 
 
 class ProductController {
 
     async getTypesProduct(req, res) {
         try {
-            const product_types = await Products_type.findAll();
+            const product_types = await productServices.getTypesProduct()
             res.json(product_types)
         } catch (error) {
             console.log(error)
         }
     }
-    async getProductByType(req, res) {
+    async getProductsByType(req, res) {
         try {
-            const { type } = req.params
-            const getProducts = await Products.findAll({ where: { productsTypeId: type } })
+            const { typeId } = req.params
+            const getProducts = await productServices.getProductsByType(typeId)
             res.json(getProducts)
         } catch (error) {
             console.log(error)

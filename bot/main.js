@@ -9,7 +9,7 @@ import command_operations from './settings/index.js'
 
 
 
-const bot = new Telegram(process.env.API_TOKEN_BOT, {
+const bot = new Telegram(process.env.API_TOKEN_BOT, {  
     polling: true
 })
 

@@ -1,11 +1,11 @@
 import Users from '../../database/models/Users.js'
 import Roles from '../../database/models/Roles.js'
-
+import userServices from './user.services.js'
 class UserController {
 
     async getAllUser(req, res) {
         try {
-            const users = await Users.findAll()
+            const users = await userServices.getAllUser()
             res.json(users)
         } catch (error) {
             console.log(error)
@@ -15,7 +15,7 @@ class UserController {
 
     async getWaiter(req, res) {
         try {
-            const usersWaiter = await Users.findAll({ where: { roleId: 3 }, include: [{ model: Roles, required: true }] })
+            const usersWaiter = await userServices.getUserRole(3)
             res.json(usersWaiter)
         } catch (error) {
             console.log(error)
@@ -25,7 +25,7 @@ class UserController {
 
     async getCooks(req, res) {
         try {
-            const usersWaiter = await Users.findAll({ where: { roleId: 2 } ,include: [{ model: Roles, required: true }] })
+            const usersWaiter = await userServices.getUserRole(2)
             res.json(usersWaiter)
         } catch (error) {
             console.log(error)
@@ -35,7 +35,7 @@ class UserController {
 
     async getUsersWork(req, res) {
         try {
-            const usersWork = await Users.findAll({ where: { status_work: true }, include: [{ model: Roles, required: true }] })
+            const usersWork = await userServices.getUsersStatusWork(true)
             res.json(usersWork)
         } catch (error) {
             console.log(error)
@@ -43,7 +43,7 @@ class UserController {
     }
     async getUsersNotWork(req, res) {
         try {
-            const usersNotWork = await Users.findAll({ where: { status_work: false }, include: [{ model: Roles, required: true }] })
+            const usersNotWork = await userServices.getUsersStatusWork(false)
             res.json(usersNotWork)
         } catch (error) {
             console.log(error)
