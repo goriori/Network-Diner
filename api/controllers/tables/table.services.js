@@ -10,7 +10,10 @@ class TableServices {
     }
     async getOne(id) {
         const findTable = await Tables.findOne({ where: { id } })
-        if (!findTable) return res.status(404).json('Not found')
+        if (!findTable) return {
+            status:404,
+            message:'Not found'
+        }
         return findTable
     }
     async getInfo() {

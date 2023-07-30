@@ -43,16 +43,18 @@ const stafMarkup = {
                 callback_data: "staff_working",
                 handler: async (chat_id, bot, message_id) => {
                     const staffs_work = await requestGetApi('/user/users_work', 'get')
-                    console.log(staffs_work)
-
+                    console.log('staffs count: ', staffs_work)
                     let resultString = ''
-                    staffs_work.forEach(item => {
-                        resultString += `
-                        \nПользователь: @${item.username},
-                        \nСтатус работы: ${item.status_work ? 'Работает' : 'Не работает'},
-                        \nДолжность: ${item.role.name_role}
-                        `
-                    })
+                    if (staffs_work.length !== 0) {
+                        staffs_work.forEach(item => {
+                            resultString += ` 
+                            \nПользователь: @${item.username},
+                            \nСтатус работы: ${item.status_work ? 'Работает' : 'Не работает'},
+                            \nДолжность: ${item.role.name_role}
+                            `
+                        })
+                    } else resultString = 'В данный момент нет ни одного сотрудника на работе'
+
 
                     bot.editMessageText(resultString, { chat_id, message_id, reply_markup: comebackMarkup })
 
@@ -63,16 +65,18 @@ const stafMarkup = {
                 callback_data: "staff_dont_work",
                 handler: async (chat_id, bot, message_id) => {
                     const staffs_not_work = await requestGetApi('/user/users_not_work', 'get')
-
+                    console.log('staffs count: ', staffs_not_work)
                     let resultString = ''
-                    staffs_not_work.forEach(item => {
-                        resultString += `
-                        \nПользователь: @${item.username},
-                        \nСтатус работы: ${item.status_work ? 'Работает' : 'Не работает'},
-                        \nДолжность: ${item.role.name_role}
-                        `
+                    if (staffs_not_work.length !== 0) {
+                        staffs_not_work.forEach(item => {
+                            resultString += `
+                            \nПользователь: @${item.username},
+                            \nСтатус работы: ${item.status_work ? 'Работает' : 'Не работает'},
+                            \nДолжность: ${item.role.name_role}
+                            `
+                        })
+                    } else resultString = 'В данный момент нет ни одного сотрудника кто не работает'
 
-                    })
                     bot.editMessageText(resultString, { chat_id, message_id, reply_markup: comebackMarkup })
 
                 }
@@ -84,39 +88,37 @@ const stafMarkup = {
                 callback_data: "staff_cook",
                 handler: async (chat_id, bot, message_id) => {
                     const staffs_cook = await requestGetApi('/user/users_cook', 'get')
-                    if (staffs_cook == 0) {
-                        bot.sendMessage('В данный момент у вас нет поваров ', { chat_id, message_id, reply_markup: comebackMarkup })
-                    } else {
-                        let resultString = ''
+
+                    let resultString = ''
+                    if (staffs_cook.length !== 0) {
                         staffs_cook.forEach(item => {
                             resultString += `
-                            \nПользователь: @${item.username},
-                            \nДолжность: ${item.role.name_role}
-                            `
+                                \nПользователь: @${item.username},
+                                \nДолжность: ${item.role.name_role}
+                                `
                         })
-                        bot.editMessageText(resultString, { chat_id, message_id, reply_markup: comebackMarkup })
-                    }
+                    } else resultString = 'В данный момент у вас нет ни одного сотрудника с такой должностью'
 
+                    bot.editMessageText(resultString, { chat_id, message_id, reply_markup: comebackMarkup })
                 }
+
             },
             {
                 text: "Официанты",
                 callback_data: "staf_waiter",
                 handler: async (chat_id, bot, message_id) => {
                     const staffs_waiter = await requestGetApi('/user/users_waiter', 'get')
+                    let resultString = ''
+                    if (staffs_waiter.length !== 0) {
 
-                    if (staffs_waiter == 0) {
-                        bot.editMessageText('В данный момент у вас нет официантов ', { chat_id, message_id, reply_markup: comebackMarkup })
-                    } else {
-                        let resultString = ''
                         staffs_waiter.forEach(item => {
                             resultString += `
-                            \nПользователь: @${item.username},
-                            \nДолжность: ${item.role.name_role}
-                            `
+                                \nПользователь: @${item.username},
+                                \nДолжность: ${item.role.name_role}
+                                `
                         })
-                        bot.editMessageText(resultString, { chat_id, message_id, reply_markup: comebackMarkup })
-                    }
+                    } else resultString = 'В данный момент у вас нет ни одного сотрудника с такой должностью'
+                    bot.editMessageText(resultString, { chat_id, message_id, reply_markup: comebackMarkup })
                 }
             },
         ],
@@ -159,7 +161,7 @@ const roomMarkups = {
                 callback_data: 'free_tables',
                 handler: async (chat_id, bot, message_id) => {
                     const free_tables = await requestGetApi('/table/table_free', 'get')
-                    if (free_tables == 0) {
+                    if (free_tables.length == 0) {
                         bot.editMessageText('Свободных столов в данный момент времени - нет', { chat_id, message_id, reply_markup: comebackMarkup })
                     } else {
                         let count_tables = [];
@@ -178,14 +180,13 @@ const roomMarkups = {
                 callback_data: 'occupied_tables',
                 handler: async (chat_id, bot, message_id) => {
                     const occupied_tables = await requestGetApi('/table/table_not_free', 'get')
-                    if (occupied_tables == 0) {
+                    if (occupied_tables.length == 0) {
                         bot.editMessageText('Занятых столов в данный момент времени - нет', { chat_id, message_id, reply_markup: comebackMarkup })
                     } else {
                         let count_tables = []
                         occupied_tables.forEach(item => {
                             count_tables.push(item.number_table)
                         })
-
                         // Сделать столы кнопками.
                         bot.editMessageText(`Список занятых столиков:${count_tables} `, { chat_id, message_id, reply_markup: comebackMarkup })
                     }
@@ -208,8 +209,10 @@ const roomMarkups = {
 
 
 
+const { itemsMarkup } = await generateMenuMarkup()
+const { productsMarkup } = async () => await import('./utils/generate_markups.js')
 
-const menuListMarkup = await generateMenuMarkup()
+const menuListMarkup = itemsMarkup
 const menuMarkup = {
     resize_keyboard: true,
     one_time_keyboard: true,
@@ -250,4 +253,4 @@ const directorMarkup = {
 }
 
 
-export { directorMarkup, stafMarkup, roomMarkups, menuMarkup, requestGetApi }
+export { directorMarkup, stafMarkup, roomMarkups, menuMarkup, productsMarkup }

@@ -35,7 +35,7 @@ class AuthorizationService {
     async signin(username, password) {
         try {
             const findUser = await Users.findOne({ where: { username }, include: [{ model: Roles, required: true }] })
-            if (!findUser) return 401
+            if (!findUser) return this.messages_response.errors.unauthorize
             const resultCheck = await check_password(password, findUser.password)
             console.log('resultCheckPassword: ', resultCheck)
             if (!resultCheck) return this.messages_response.errors.unauthorize

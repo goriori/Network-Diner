@@ -1,7 +1,7 @@
 
 import axios from "axios"
-import {directorMarkup} from "./director/director.js"
-
+import { directorMarkup } from "./director/director.js"
+import { requestGetApi } from "../../utils/requests.js"
 
 
 const roles_markups = {
@@ -11,7 +11,7 @@ const roles_markups = {
         [
             {
                 text: 'Директор',
-                callback_data: 'role_director', 
+                callback_data: 'role_director',
                 handler: (chat_id, bot, message_id) => {
 
 
@@ -20,8 +20,7 @@ const roles_markups = {
                         const password = msg.text
                         bot.sendMessage(chat_id, 'Ожидайте, идет проверка данных....')
                         const auth = await authorization(username, password)
-                        console.log(auth)
-                        if (auth === null) bot.sendMessage(chat_id, 'Не верные данные, попробуйте снова',)
+                        if (auth.status === 401) bot.sendMessage(chat_id, 'Не верные данные, попробуйте снова',)
                         else {
                             const user_role = auth.user.role.name_role
                             const username = auth.user.username
@@ -68,9 +67,9 @@ const roles_markups = {
         ]
     ]
 }
+ 
 
-
-export default roles_markups
+export default roles_markups 
 
 
 
@@ -82,11 +81,14 @@ const authorization = async (username, password) => {
     try {
         const { data } = await axios({
             method: 'post',
-            url: 'http://localhost:4040/api/auth/signin',
+            url: 'http://localhost:8000/api/auth/signin',
             data: {
-                username, password
+                username: username,
+                password: password
+
             }
         })
+        console.log(data)
         return data
     } catch (error) {
 
